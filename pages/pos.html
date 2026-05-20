@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>WarkopPOS — Kasir POS</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <script>
+(function(){var s=sessionStorage.getItem('warkop_session');if(!s){window.location.href='../login.html';return;}try{var d=JSON.parse(s);if(Date.now()>d.expiresAt){sessionStorage.removeItem('warkop_session');window.location.href='../login.html';}}catch(e){window.location.href='../login.html';}})();
+</script>
+  
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="s-brand">
+      <div class="s-ikon">☕</div>
+      <div><span class="s-nama">WarkopPOS</span><span class="s-sub">Sistem Stok Opname</span></div>
+    </div>
+    <div class="s-pengguna" id="rolePill">
+      <span class="s-dot"></span>
+      <span id="roleLabel">Loading...</span>
+    </div>
+    <nav class="nav">
+      <div class="nav-judul">Utama</div>
+    <a href="../index.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" clip-rule="evenodd"/></svg>
+      Dashboard
+    </a>
+    <a href="pos.html" class="nav-item aktif">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z" clip-rule="evenodd"/></svg>
+      Kasir POS
+    </a>
+    <a href="opname.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/></svg>
+      Stok Opname
+    </a>
+      <div class="nav-judul">Manajemen</div>
+    <a href="barang.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4z" clip-rule="evenodd"/></svg>
+      Master Barang
+    </a>
+    <a href="bom.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" clip-rule="evenodd"/></svg>
+      Bill of Material
+    </a>
+    <a href="supplier.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h2.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1V8a1 1 0 00-.293-.707l-2-2A1 1 0 0017 5h-3a1 1 0 00-1 1v3H3V4z" clip-rule="evenodd"/></svg>
+      Supplier
+    </a>
+      <div class="nav-judul">Laporan</div>
+    <a href="reorder.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/></svg>
+      Reorder Point<span class="nav-angka">3</span>
+    </a>
+    <a href="pareto.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" clip-rule="evenodd"/></svg>
+      Analisis Pareto
+    </a>
+    <a href="laporan.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"/></svg>
+      Laporan Harian
+    </a>
+      <div class="nav-judul">Sistem</div>
+    <a href="users.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" clip-rule="evenodd"/></svg>
+      Kelola Pengguna
+    </a>
+    <a href="settings.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+      Pengaturan
+    </a>
+    </nav>
+    <div class="s-bawah" id="sidebarBawah"></div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="App.tutupSidebar()"></div>
+  <main class="main" id="main">
+  <header class="topbar">
+    <div class="t-kiri">
+      <button class="tombol-menu" onclick="App.toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <h1 class="t-judul">Kasir POS</h1>
+    </div>
+    <div class="t-kanan">
+      <span class="t-jam" id="jam">—</span>
+      
+    </div>
+  </header>
+    <div class="konten" id="konten">
+
+      <!-- TIPE PESANAN -->
+      <div class="kartu muncul" style="--tunda:0ms;padding:12px 18px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span style="font-size:13px;font-weight:600;">Tipe Pesanan:</span>
+          <div style="display:flex;gap:6px;">
+            <button id="btnDineIn" class="btn btn-hijau btn-kecil" onclick="pilihTipe('Dine-in')">🪑 Makan di Sini</button>
+            <button id="btnTakeAway" class="btn btn-kecil" onclick="pilihTipe('Take Away')">📦 Bawa Pulang</button>
+          </div>
+          <span class="badge badge-hijau" id="tipeBadge">Makan di Sini</span>
+        </div>
+      </div>
+
+      <div class="pos-layout">
+        <!-- KIRI: MENU + RIWAYAT -->
+        <div>
+          <div class="kartu muncul" style="--tunda:60ms;margin-bottom:14px;">
+            <div class="kartu-header">
+              <span class="kartu-judul">☕ Pilih Menu</span>
+              <select id="filterMenu" onchange="renderMenu()" style="width:auto;padding:6px 10px;font-size:12px;">
+                <option value="semua">Semua</option>
+                <option value="MN-00">Minuman</option>
+                <option value="MN-04">Makanan</option>
+                <option value="MN-06">Lainnya</option>
+              </select>
+            </div>
+            <div class="grid-menu" id="gridMenu"></div>
+          </div>
+
+          <div class="kartu muncul" style="--tunda:120ms;">
+            <div class="kartu-header">
+              <span class="kartu-judul">🧾 Riwayat Transaksi Hari Ini</span>
+              <span class="badge badge-abu" id="jumlahTrx">0 transaksi</span>
+            </div>
+            <div class="tabel-wrap">
+              <table class="tabel">
+                <thead><tr><th>Jam</th><th>Menu</th><th>Qty</th><th>Total</th><th>Tipe</th></tr></thead>
+                <tbody id="riwayatTrx">
+                  <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--teks-redup);">Belum ada transaksi</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- KANAN: KERANJANG -->
+        <div class="keranjang muncul" style="--tunda:80ms;">
+          <div class="keranjang-atas">
+            <span class="keranjang-judul">🛒 Pesanan</span>
+            <button class="btn btn-kecil" onclick="kosongkanKeranjang()">🗑 Kosongkan</button>
+          </div>
+          <div class="keranjang-isi" id="isiKeranjang">
+            <div class="keranjang-kosong">Belum ada menu dipilih.<br/>Ketuk menu di sebelah kiri.</div>
+          </div>
+          <div class="keranjang-bawah">
+            <div class="total-baris">
+              <span class="total-label">Total Bayar</span>
+              <span class="total-nilai" id="totalHarga">Rp 0</span>
+            </div>
+            <div class="bom-info">
+              <span>Stok bahan otomatis berkurang</span>
+              <span style="color:var(--hijau);">✓ Aktif</span>
+            </div>
+            <button class="btn btn-hijau btn-penuh" onclick="prosesTrx()">
+              ✓ Proses Transaksi
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+  <div class="toast" id="toast"></div>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+let keranjang = [];
+let tipe = 'Dine-in';
+
+function pilihTipe(t) {
+  tipe = t;
+  const label = t === 'Dine-in' ? 'Makan di Sini' : 'Bawa Pulang';
+  document.getElementById('tipeBadge').textContent = label;
+  document.getElementById('btnDineIn').className   = 'btn btn-kecil' + (t==='Dine-in'?' btn-hijau':'');
+  document.getElementById('btnTakeAway').className = 'btn btn-kecil' + (t==='Take Away'?' btn-hijau':'');
+}
+
+function renderMenu() {
+  const filter = document.getElementById('filterMenu').value;
+  const menus  = App.state.menus.filter(m => filter === 'semua' || m.id.startsWith(filter));
+  document.getElementById('gridMenu').innerHTML = menus.map(m => `
+    <div class="kartu-menu" onclick="tambahKeranjang('${m.id}')">
+      <span class="menu-emoji">${m.emoji}</span>
+      <div class="menu-nama">${m.nama}</div>
+      <div class="menu-harga">${App.rp(m.harga)}</div>
+    </div>`).join('');
+}
+
+function tambahKeranjang(id) {
+  const menu = App.state.menus.find(m => m.id === id);
+  if (!menu) return;
+  const ada = keranjang.find(k => k.id === id);
+  if (ada) ada.qty++;
+  else keranjang.push({id, nama: menu.nama, harga: menu.harga, qty: 1});
+  renderKeranjang();
+  App.toast(menu.nama + ' ditambahkan ✓', 'sukses');
+}
+
+function ubahQty(idx, delta) {
+  keranjang[idx].qty += delta;
+  if (keranjang[idx].qty <= 0) keranjang.splice(idx, 1);
+  renderKeranjang();
+}
+
+function kosongkanKeranjang() { keranjang = []; renderKeranjang(); }
+
+function renderKeranjang() {
+  const el = document.getElementById('isiKeranjang');
+  const totalEl = document.getElementById('totalHarga');
+  if (!keranjang.length) {
+    el.innerHTML = '<div class="keranjang-kosong">Belum ada menu dipilih.<br/>Ketuk menu di sebelah kiri.</div>';
+    totalEl.textContent = 'Rp 0';
+    return;
+  }
+  let total = 0;
+  el.innerHTML = keranjang.map((item, i) => {
+    total += item.harga * item.qty;
+    return `<div class="item-keranjang">
+      <span class="item-nama">${item.nama}</span>
+      <div class="qty-kontrol">
+        <button class="qty-btn" onclick="ubahQty(${i},-1)">−</button>
+        <span class="qty-angka">${item.qty}</span>
+        <button class="qty-btn" onclick="ubahQty(${i},1)">+</button>
+      </div>
+      <span class="item-harga">${App.rp(item.harga * item.qty)}</span>
+    </div>`;
+  }).join('');
+  totalEl.textContent = App.rp(total);
+}
+
+function prosesTrx() {
+  if (!keranjang.length) { App.toast('Pilih menu dulu!', 'galat'); return; }
+  keranjang.forEach(k => {
+    const menu = App.state.menus.find(m => m.id === k.id);
+    menu?.bom.forEach(b => {
+      const brg = App.state.barang.find(x => x.id === b.b);
+      if (brg) brg.stok = Math.max(0, brg.stok - b.q * k.qty);
+    });
+    App.state.transaksi.push({
+      waktu: new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),
+      menu: k.nama, qty: k.qty,
+      total: k.harga * k.qty, tipe
+    });
+  });
+  renderRiwayat();
+  keranjang = [];
+  renderKeranjang();
+  App.toast('Transaksi berhasil! Stok bahan sudah dikurangi ✓', 'sukses');
+}
+
+function renderRiwayat() {
+  const tbody = document.getElementById('riwayatTrx');
+  const hitEl = document.getElementById('jumlahTrx');
+  const rows  = [...App.state.transaksi].reverse().slice(0, 25);
+  hitEl.textContent = App.state.transaksi.length + ' transaksi';
+  tbody.innerHTML = rows.map(t => `
+    <tr>
+      <td class="td-mono td-redup">${t.waktu}</td>
+      <td>${t.menu}</td>
+      <td class="td-mono">${t.qty}</td>
+      <td class="td-mono">${App.rp(t.total)}</td>
+      <td><span class="badge ${t.tipe==='Dine-in'?'badge-biru':'badge-hijau'}" style="font-size:10px;">${t.tipe}</span></td>
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--teks-redup);">Belum ada transaksi</td></tr>';
+}
+
+document.addEventListener('DOMContentLoaded', () => { renderMenu(); renderRiwayat(); });
+</script>
+
+<script>
+// Inject info user & tombol logout di sidebar footer
+(function() {
+  const sess = sessionStorage.getItem('warkop_session');
+  if (!sess) return;
+  const s = JSON.parse(sess);
+  const isPages = window.location.pathname.includes('/pages/');
+  const usersHref = isPages ? 'users.html' : 'pages/users.html';
+
+  const badge = s.source === 'sheets'
+    ? '<span style="font-size:9px;background:rgba(29,158,117,.2);color:#5AC99A;padding:2px 6px;border-radius:999px;margin-left:4px;">● Sheets</span>'
+    : '<span style="font-size:9px;background:rgba(255,255,255,.06);color:#5C5850;padding:2px 6px;border-radius:999px;margin-left:4px;">○ Lokal</span>';
+
+  const footer = document.getElementById('sidebarBawah');
+  if (!footer) return;
+  footer.innerHTML = `
+    <div style="font-size:11px;color:var(--teks-redup);margin-bottom:7px;font-family:var(--mono);display:flex;align-items:center;flex-wrap:wrap;gap:3px;">
+      <span>${s.username}</span><span style="opacity:.4;">·</span><span>${s.role}</span>${badge}
+    </div>
+    <div style="display:flex;gap:6px;">
+      ${s.role === 'owner' ? `<a href="${usersHref}" style="flex:1;padding:7px 6px;background:rgba(255,255,255,.04);border:1px solid var(--garis-kuat);border-radius:var(--r-kecil);color:var(--teks-2);font-size:11px;font-weight:600;text-align:center;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">👥 User</a>` : ''}
+      <button onclick="WarkopAuth.logout()" style="flex:1;padding:7px 6px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:var(--r-kecil);color:#F87171;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s;" onmouseover="this.style.background='rgba(220,38,38,.2)'" onmouseout="this.style.background='rgba(220,38,38,.1)'">⏏ Keluar</button>
+    </div>
+  `;
+
+  // Sembunyikan elemen owner-only jika karyawan
+  if (s.role !== 'owner') {
+    document.querySelectorAll('.owner-only').forEach(el => {
+      if (el.tagName === 'A') { el.style.opacity='.3'; el.style.pointerEvents='none'; }
+      else el.style.display = 'none';
+    });
+  }
+  // Update label sidebar
+  const roleLabel = document.getElementById('roleLabel');
+  if (roleLabel) roleLabel.textContent = s.nama;
+  const rolePill = document.getElementById('rolePill');
+  if (rolePill) {
+    const dot = rolePill.querySelector('.s-dot');
+    if (dot) dot.style.background = s.role === 'owner' ? 'var(--hijau)' : '#93C5FD';
+    rolePill.style.color = s.role === 'owner' ? 'var(--hijau)' : '#93C5FD';
+  }
+})();
+</script>
+</body>
+</html>

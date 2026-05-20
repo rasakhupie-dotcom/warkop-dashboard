@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>WarkopPOS — Laporan Harian</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <script>
+(function(){var s=sessionStorage.getItem('warkop_session');if(!s){window.location.href='../login.html';return;}try{var d=JSON.parse(s);if(Date.now()>d.expiresAt){sessionStorage.removeItem('warkop_session');window.location.href='../login.html';}}catch(e){window.location.href='../login.html';}})();
+</script>
+  
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="s-brand">
+      <div class="s-ikon">☕</div>
+      <div><span class="s-nama">WarkopPOS</span><span class="s-sub">Sistem Stok Opname</span></div>
+    </div>
+    <div class="s-pengguna" id="rolePill">
+      <span class="s-dot"></span>
+      <span id="roleLabel">Loading...</span>
+    </div>
+    <nav class="nav">
+      <div class="nav-judul">Utama</div>
+    <a href="../index.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" clip-rule="evenodd"/></svg>
+      Dashboard
+    </a>
+    <a href="pos.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z" clip-rule="evenodd"/></svg>
+      Kasir POS
+    </a>
+    <a href="opname.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/></svg>
+      Stok Opname
+    </a>
+      <div class="nav-judul">Manajemen</div>
+    <a href="barang.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4z" clip-rule="evenodd"/></svg>
+      Master Barang
+    </a>
+    <a href="bom.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" clip-rule="evenodd"/></svg>
+      Bill of Material
+    </a>
+    <a href="supplier.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h2.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1V8a1 1 0 00-.293-.707l-2-2A1 1 0 0017 5h-3a1 1 0 00-1 1v3H3V4z" clip-rule="evenodd"/></svg>
+      Supplier
+    </a>
+      <div class="nav-judul">Laporan</div>
+    <a href="reorder.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/></svg>
+      Reorder Point<span class="nav-angka">3</span>
+    </a>
+    <a href="pareto.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" clip-rule="evenodd"/></svg>
+      Analisis Pareto
+    </a>
+    <a href="laporan.html" class="nav-item owner-only aktif">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"/></svg>
+      Laporan Harian
+    </a>
+      <div class="nav-judul">Sistem</div>
+    <a href="users.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" clip-rule="evenodd"/></svg>
+      Kelola Pengguna
+    </a>
+    <a href="settings.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+      Pengaturan
+    </a>
+    </nav>
+    <div class="s-bawah" id="sidebarBawah"></div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="App.tutupSidebar()"></div>
+  <main class="main" id="main">
+  <header class="topbar">
+    <div class="t-kiri">
+      <button class="tombol-menu" onclick="App.toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <h1 class="t-judul">Laporan Harian</h1>
+    </div>
+    <div class="t-kanan">
+      <span class="t-jam" id="jam">—</span>
+      
+    </div>
+  </header>
+    <div class="konten" id="konten">
+
+      <!-- KESIMPULAN OTOMATIS -->
+      <div class="kartu muncul" style="--tunda:0ms;background:var(--biru-muda);border-color:rgba(59,130,246,.25);margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:700;color:#93C5FD;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">📝 Kesimpulan Otomatis Hari Ini</div>
+        <div id="kesimpulanOtomatis" style="font-size:13px;color:var(--teks);line-height:1.7;"></div>
+      </div>
+
+      <!-- METRIK LAPORAN -->
+      <div class="grid-4 muncul" style="--tunda:60ms;margin-bottom:16px;">
+        <div class="metrik metrik-hijau">
+          <span class="metrik-emoji">💰</span>
+          <div class="metrik-label">Total Penjualan</div>
+          <div class="metrik-nilai">Rp 1,42 Jt</div>
+          <div class="metrik-sub metrik-naik">↑ +12% kemarin</div>
+        </div>
+        <div class="metrik metrik-kuning">
+          <span class="metrik-emoji">📦</span>
+          <div class="metrik-label">Total HPP</div>
+          <div class="metrik-nilai">Rp 934 Rb</div>
+          <div class="metrik-sub">Biaya bahan baku</div>
+        </div>
+        <div class="metrik metrik-biru">
+          <span class="metrik-emoji">💎</span>
+          <div class="metrik-label">Keuntungan Kotor</div>
+          <div class="metrik-nilai">Rp 487 Rb</div>
+          <div class="metrik-sub metrik-naik">Margin 34.3%</div>
+        </div>
+        <div class="metrik metrik-merah">
+          <span class="metrik-emoji">🧾</span>
+          <div class="metrik-label">Jumlah Transaksi</div>
+          <div class="metrik-nilai">87</div>
+          <div class="metrik-sub">Rata-rata Rp 16.333</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- RINGKASAN PENJUALAN -->
+        <div class="kartu muncul" style="--tunda:120ms;">
+          <div class="kartu-header">
+            <span class="kartu-judul">📊 Ringkasan Penjualan</span>
+            <span id="tanggalLaporan" style="font-size:12px;color:var(--teks-2);"></span>
+          </div>
+          <table class="tabel">
+            <tbody>
+              <tr><td style="color:var(--teks-2);">Total Penjualan</td><td class="td-mono" style="text-align:right;font-weight:700;">Rp 1.421.000</td></tr>
+              <tr><td style="color:var(--teks-2);">Total Biaya Bahan (HPP)</td><td class="td-mono" style="text-align:right;">Rp 934.000</td></tr>
+              <tr><td style="color:var(--teks-2);">Keuntungan Kotor</td><td class="td-mono" style="text-align:right;color:var(--hijau);font-weight:700;">Rp 487.000</td></tr>
+              <tr><td style="color:var(--teks-2);">Jumlah Transaksi</td><td class="td-mono" style="text-align:right;">87 transaksi</td></tr>
+              <tr><td style="color:var(--teks-2);">Rata-rata Per Transaksi</td><td class="td-mono" style="text-align:right;">Rp 16.333</td></tr>
+              <tr><td style="color:var(--teks-2);">Barang Reorder Hari Ini</td><td class="td-mono" style="text-align:right;color:var(--merah);">3 item</td></tr>
+              <tr><td style="color:var(--teks-2);">Selisih Stok (Opname)</td><td class="td-mono" style="text-align:right;color:var(--kuning);">2 item</td></tr>
+            </tbody>
+          </table>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
+            <button class="btn btn-hijau btn-kecil" onclick="App.toast('PDF laporan diunduh!','sukses')">⬇ Unduh PDF</button>
+            <button class="btn btn-kecil" onclick="App.toast('Excel laporan diunduh!','sukses')">⬇ Unduh Excel</button>
+            <button class="btn btn-kecil" onclick="App.toast('Laporan terkirim ke email owner pukul 21.00!','sukses')">✉ Kirim Email</button>
+          </div>
+        </div>
+
+        <!-- KINERJA KARYAWAN -->
+        <div>
+          <div class="kartu muncul" style="--tunda:160ms;margin-bottom:14px;">
+            <div class="kartu-header"><span class="kartu-judul">👥 Kinerja Karyawan</span></div>
+            <table class="tabel">
+              <thead><tr><th>Nama</th><th>Shift</th><th>Transaksi</th><th>Opname</th></tr></thead>
+              <tbody>
+                <tr><td>Andi P.</td><td>Pagi</td><td class="td-mono">42</td><td><span class="badge badge-hijau" style="font-size:10px;">✓ Selesai</span></td></tr>
+                <tr><td>Sari W.</td><td>Siang</td><td class="td-mono">45</td><td><span class="badge badge-kuning" style="font-size:10px;">⏳ Pending</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="kartu muncul" style="--tunda:200ms;">
+            <div class="kartu-header"><span class="kartu-judul">📧 Jadwal Email Otomatis</span></div>
+            <div style="padding:14px;background:var(--bg-input);border-radius:var(--r);font-size:12px;color:var(--teks-2);line-height:1.7;">
+              Setiap malam pukul <strong style="color:var(--teks);">21.00 WIB</strong>, sistem otomatis mengirim laporan ke email owner berisi:
+              <br/>• Ringkasan penjualan & keuntungan
+              <br/>• Daftar barang yang perlu dibeli
+              <br/>• Laporan selisih stok opname
+              <br/>• Lampiran PDF & Excel
+            </div>
+            <div style="margin-top:10px;">
+              <button class="btn btn-hijau btn-kecil" onclick="App.kirimLaporan()">✉ Test Kirim Sekarang</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+  <div class="toast" id="toast"></div>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tgl = new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('tanggalLaporan').textContent = tgl;
+  document.getElementById('kesimpulanOtomatis').innerHTML =
+    'Hari ini terdapat <strong>3 bahan baku mencapai titik reorder</strong> (susu, gas, es batu), ' +
+    '<strong>Es Kopi Susu & Kopi Hitam</strong> menyumbang 60% total penjualan (Rp 684.000), ' +
+    'serta ditemukan <strong style="color:var(--kuning)">selisih stok pada Gula Aren dan Kopi Bubuk</strong> ' +
+    'sehingga memerlukan audit internal. ' +
+    'Keuntungan hari ini <strong style="color:var(--hijau)">Rp 487.000</strong> dengan margin 34.3%.';
+});
+</script>
+
+<script>
+// Inject info user & tombol logout di sidebar footer
+(function() {
+  const sess = sessionStorage.getItem('warkop_session');
+  if (!sess) return;
+  const s = JSON.parse(sess);
+  const isPages = window.location.pathname.includes('/pages/');
+  const usersHref = isPages ? 'users.html' : 'pages/users.html';
+
+  const badge = s.source === 'sheets'
+    ? '<span style="font-size:9px;background:rgba(29,158,117,.2);color:#5AC99A;padding:2px 6px;border-radius:999px;margin-left:4px;">● Sheets</span>'
+    : '<span style="font-size:9px;background:rgba(255,255,255,.06);color:#5C5850;padding:2px 6px;border-radius:999px;margin-left:4px;">○ Lokal</span>';
+
+  const footer = document.getElementById('sidebarBawah');
+  if (!footer) return;
+  footer.innerHTML = `
+    <div style="font-size:11px;color:var(--teks-redup);margin-bottom:7px;font-family:var(--mono);display:flex;align-items:center;flex-wrap:wrap;gap:3px;">
+      <span>${s.username}</span><span style="opacity:.4;">·</span><span>${s.role}</span>${badge}
+    </div>
+    <div style="display:flex;gap:6px;">
+      ${s.role === 'owner' ? `<a href="${usersHref}" style="flex:1;padding:7px 6px;background:rgba(255,255,255,.04);border:1px solid var(--garis-kuat);border-radius:var(--r-kecil);color:var(--teks-2);font-size:11px;font-weight:600;text-align:center;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">👥 User</a>` : ''}
+      <button onclick="WarkopAuth.logout()" style="flex:1;padding:7px 6px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:var(--r-kecil);color:#F87171;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s;" onmouseover="this.style.background='rgba(220,38,38,.2)'" onmouseout="this.style.background='rgba(220,38,38,.1)'">⏏ Keluar</button>
+    </div>
+  `;
+
+  // Sembunyikan elemen owner-only jika karyawan
+  if (s.role !== 'owner') {
+    document.querySelectorAll('.owner-only').forEach(el => {
+      if (el.tagName === 'A') { el.style.opacity='.3'; el.style.pointerEvents='none'; }
+      else el.style.display = 'none';
+    });
+  }
+  // Update label sidebar
+  const roleLabel = document.getElementById('roleLabel');
+  if (roleLabel) roleLabel.textContent = s.nama;
+  const rolePill = document.getElementById('rolePill');
+  if (rolePill) {
+    const dot = rolePill.querySelector('.s-dot');
+    if (dot) dot.style.background = s.role === 'owner' ? 'var(--hijau)' : '#93C5FD';
+    rolePill.style.color = s.role === 'owner' ? 'var(--hijau)' : '#93C5FD';
+  }
+})();
+</script>
+</body>
+</html>
