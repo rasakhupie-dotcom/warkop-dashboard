@@ -7,115 +7,68 @@
   <link rel="stylesheet" href="css/main.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <script>
-(function(){var s=sessionStorage.getItem('warkop_session');if(!s){window.location.href='login.html';return;}try{var d=JSON.parse(s);if(Date.now()>d.expiresAt){sessionStorage.removeItem('warkop_session');window.location.href='login.html';}}catch(e){window.location.href='login.html';}})();
-</script>
-  
+    // Auth guard — harus sebelum konten apapun
+    (function(){
+      try {
+        var s = sessionStorage.getItem('warkop_session');
+        if (!s) { window.location.href = 'login.html'; return; }
+        var d = JSON.parse(s);
+        if (Date.now() > d.expiresAt) {
+          sessionStorage.removeItem('warkop_session');
+          window.location.href = 'login.html';
+        }
+      } catch(e) { window.location.href = 'login.html'; }
+    })();
+  </script>
 </head>
 <body>
-  <aside class="sidebar" id="sidebar">
-    <div class="s-brand">
-      <div class="s-ikon">☕</div>
-      <div><span class="s-nama">WarkopPOS</span><span class="s-sub">Sistem Stok Opname</span></div>
-    </div>
-    <div class="s-pengguna" id="rolePill">
-      <span class="s-dot"></span>
-      <span id="roleLabel">Loading...</span>
-    </div>
-    <nav class="nav">
-      <div class="nav-judul">Utama</div>
-    <a href="index.html" class="nav-item aktif">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" clip-rule="evenodd"/></svg>
-      Dashboard
-    </a>
-    <a href="pages/pos.html" class="nav-item">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z" clip-rule="evenodd"/></svg>
-      Kasir POS
-    </a>
-    <a href="pages/opname.html" class="nav-item">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/></svg>
-      Stok Opname
-    </a>
-      <div class="nav-judul">Manajemen</div>
-    <a href="pages/barang.html" class="nav-item">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4z" clip-rule="evenodd"/></svg>
-      Master Barang
-    </a>
-    <a href="pages/bom.html" class="nav-item owner-only">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" clip-rule="evenodd"/></svg>
-      Bill of Material
-    </a>
-    <a href="pages/supplier.html" class="nav-item">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h2.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1V8a1 1 0 00-.293-.707l-2-2A1 1 0 0017 5h-3a1 1 0 00-1 1v3H3V4z" clip-rule="evenodd"/></svg>
-      Supplier
-    </a>
-      <div class="nav-judul">Laporan</div>
-    <a href="pages/reorder.html" class="nav-item">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/></svg>
-      Reorder Point<span class="nav-angka">3</span>
-    </a>
-    <a href="pages/pareto.html" class="nav-item owner-only">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" clip-rule="evenodd"/></svg>
-      Analisis Pareto
-    </a>
-    <a href="pages/laporan.html" class="nav-item owner-only">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"/></svg>
-      Laporan Harian
-    </a>
-      <div class="nav-judul">Sistem</div>
-    <a href="pages/users.html" class="nav-item owner-only">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" clip-rule="evenodd"/></svg>
-      Kelola Pengguna
-    </a>
-    <a href="pages/settings.html" class="nav-item owner-only">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
-      Pengaturan
-    </a>
-    </nav>
-    <div class="s-bawah" id="sidebarBawah"></div>
-  </aside>
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="App.tutupSidebar()"></div>
+  <!-- Sidebar diinject oleh sidebar.js -->
   <main class="main" id="main">
-  <header class="topbar">
-    <div class="t-kiri">
-      <button class="tombol-menu" onclick="App.toggleSidebar()">
-        <span></span><span></span><span></span>
-      </button>
-      <h1 class="t-judul">Dashboard Utama</h1>
-    </div>
-    <div class="t-kanan">
-      <span class="t-jam" id="jam">—</span>
-      <button class="btn btn-hijau btn-kecil owner-only" onclick="App.kirimLaporan()">
-        ✉ Kirim Laporan
-      </button>
-    </div>
-  </header>
-    <div class="konten" id="konten">
+    <header class="topbar">
+      <div class="t-kiri">
+        <button class="tombol-menu" onclick="App.toggleSidebar()">
+          <span></span><span></span><span></span>
+        </button>
+        <h1 class="t-judul">Dashboard Utama</h1>
+      </div>
+      <div class="t-kanan">
+        <span class="t-jam" id="jam">—</span>
+        <span id="syncStatus" style="font-size:10px;font-weight:700;color:var(--kuning);
+          cursor:pointer;" onclick="window.location.href='pages/settings.html'"
+          title="Klik untuk pengaturan">○ Lokal</span>
+        <button class="btn btn-kecil" onclick="App.downloadExcel()">📊 Excel</button>
+        <button class="btn btn-kecil" onclick="App.downloadPDF()">📄 PDF</button>
+        <button class="btn btn-hijau btn-kecil owner-only" onclick="App.kirimLaporan()">✉ Email</button>
+      </div>
+    </header>
 
-      <!-- METRIK UTAMA -->
+    <div class="konten">
+
+      <!-- METRIK -->
       <div class="grid-4 muncul" style="--tunda:0ms">
         <div class="metrik metrik-hijau">
           <span class="metrik-emoji">💰</span>
-          <div class="metrik-label">Total Penjualan Hari Ini</div>
-          <div class="metrik-nilai" id="m-penjualan">Rp 1,42 Jt</div>
-          <div class="metrik-sub metrik-naik">↑ +12% dibanding kemarin</div>
+          <div class="metrik-label">Penjualan Hari Ini</div>
+          <div class="metrik-nilai" id="mJual">Rp 0</div>
+          <div class="metrik-sub" id="mJualSub">0 transaksi</div>
         </div>
         <div class="metrik metrik-kuning">
-          <span class="metrik-emoji">📈</span>
-          <div class="metrik-label">Keuntungan Bersih</div>
-          <div class="metrik-nilai" id="m-profit">Rp 487 Rb</div>
-          <div class="metrik-sub">Margin 34.3%</div>
+          <span class="metrik-emoji">💎</span>
+          <div class="metrik-label">Keuntungan Kotor</div>
+          <div class="metrik-nilai metrik-naik" id="mProfit">Rp 0</div>
+          <div class="metrik-sub" id="mMargin">Margin —</div>
         </div>
         <div class="metrik metrik-biru">
           <span class="metrik-emoji">🧾</span>
           <div class="metrik-label">Jumlah Transaksi</div>
-          <div class="metrik-nilai" id="m-trx">87</div>
-          <div class="metrik-sub">Dine-in 51 · Take Away 36</div>
+          <div class="metrik-nilai" id="mTrx">0</div>
+          <div class="metrik-sub">Dine-in &amp; Take Away</div>
         </div>
         <div class="metrik metrik-merah">
           <span class="metrik-emoji">⚠️</span>
-          <div class="metrik-label">Barang Perlu Reorder</div>
-          <div class="metrik-nilai" id="m-reorder">8</div>
-          <div class="metrik-sub metrik-turun">3 wajib dibeli hari ini</div>
+          <div class="metrik-label">Barang Kritis</div>
+          <div class="metrik-nilai" id="mKritis">0</div>
+          <div class="metrik-sub metrik-turun" id="mKritisSub">perlu reorder</div>
         </div>
       </div>
 
@@ -124,18 +77,18 @@
         <div class="kartu muncul" style="--tunda:80ms">
           <div class="kartu-header">
             <span class="kartu-judul">📦 Status Stok Bahan Baku</span>
-            <span class="badge badge-kuning">8 hampir habis</span>
+            <a href="pages/reorder.html" class="btn btn-kecil">Lihat Semua →</a>
           </div>
-          <div id="stokList"></div>
+          <div id="listStok"></div>
         </div>
 
         <!-- ALERT -->
         <div class="kartu muncul" style="--tunda:140ms">
           <div class="kartu-header">
             <span class="kartu-judul">🔔 Notifikasi Penting</span>
-            <span class="badge badge-merah">5 baru</span>
+            <span class="badge badge-merah" id="badgeAlert" style="display:none;">0</span>
           </div>
-          <div id="alertList"></div>
+          <div id="listAlert"></div>
         </div>
       </div>
 
@@ -143,88 +96,127 @@
         <!-- TERLARIS -->
         <div class="kartu muncul" style="--tunda:200ms">
           <div class="kartu-header">
-            <span class="kartu-judul">🏆 Menu Terlaris Hari Ini</span>
-            <a href="pages/pareto.html" class="btn btn-kecil owner-only">Lihat Analisis</a>
+            <span class="kartu-judul">🏆 Menu Terlaris</span>
+            <a href="pages/pareto.html" class="btn btn-kecil owner-only">Pareto →</a>
           </div>
-          <div id="paretoList"></div>
+          <div id="listPareto">
+            <div style="text-align:center;padding:24px;color:var(--teks-redup);font-size:12px;">
+              Mulai transaksi di Kasir POS untuk melihat data
+            </div>
+          </div>
         </div>
 
         <!-- JAM RAMAI -->
         <div class="kartu muncul" style="--tunda:260ms">
           <div class="kartu-header">
-            <span class="kartu-judul">⏰ Jam Ramai Penjualan</span>
+            <span class="kartu-judul">⏰ Jam Ramai</span>
           </div>
           <div class="grafik-jam" id="grafikJam"></div>
-          <div style="font-size:11px;color:var(--teks-2);margin-top:10px;">
-            Puncak penjualan: pukul 09.00–10.00 (32 transaksi)
+          <div style="font-size:11px;color:var(--teks-2);margin-top:10px;" id="infoJam">
+            Belum ada data transaksi hari ini
           </div>
         </div>
       </div>
 
-      <!-- RINGKASAN UNTUK OWNER -->
+      <!-- RINGKASAN OWNER -->
       <div class="kartu muncul owner-only" style="--tunda:320ms">
         <div class="kartu-header">
-          <span class="kartu-judul">📋 Ringkasan Otomatis</span>
-          <button class="btn btn-hijau btn-kecil" onclick="App.kirimLaporan()">✉ Kirim ke Email</button>
+          <span class="kartu-judul">📝 Ringkasan Otomatis</span>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-kecil" onclick="App.downloadExcel()">📊 Excel</button>
+            <button class="btn btn-kecil" onclick="App.downloadPDF()">📄 PDF</button>
+            <button class="btn btn-hijau btn-kecil" onclick="App.kirimLaporan()">✉ Email</button>
+          </div>
         </div>
-        <div style="background:var(--bg-input);border-radius:var(--r);padding:14px;font-size:13px;color:var(--teks-2);line-height:1.7;">
-          Hari ini terdapat <strong style="color:var(--teks)">3 bahan baku kritis</strong> (susu, gas, es batu),
-          <strong style="color:var(--teks)">Es Kopi Susu & Kopi Hitam</strong> menyumbang 60% penjualan,
-          ditemukan <strong style="color:var(--kuning)">selisih stok Gula Aren</strong> yang perlu diaudit.
-          Laporan PDF dikirim otomatis pukul 21.00 WIB.
+        <div id="kesimpulan" style="background:var(--bg-input);border-radius:var(--r);
+          padding:14px;font-size:13px;color:var(--teks-2);line-height:1.7;">
+          Memuat ringkasan...
         </div>
       </div>
 
     </div>
   </main>
+
   <div class="toast" id="toast"></div>
+
+  <!-- SheetJS untuk export Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
-  <script>
-  const STOK = [
-    {nama:'Kopi Bubuk',    qty:'1.2 kg',  pct:85, status:'aman'},
-    {nama:'Susu Cair',     qty:'800 ml',  pct:30, status:'kritis'},
-    {nama:'Gula Aren',     qty:'2.1 L',   pct:75, status:'aman'},
-    {nama:'Es Batu',       qty:'4 bag',   pct:45, status:'hampir'},
-    {nama:'Cup Plastik',   qty:'85 pcs',  pct:55, status:'hampir'},
-    {nama:'Gas LPG',       qty:'0.8 tab', pct:20, status:'kritis'},
-  ];
-  const ALERT = [
-    {warna:'merah',  teks:'Susu Cair di bawah stok aman — wajib beli hari ini', jam:'08:45'},
-    {warna:'merah',  teks:'Gas LPG mencapai titik reorder (ROP)', jam:'09:12'},
-    {warna:'kuning', teks:'Selisih stok Gula Aren: sistem 2.5L, fisik 2.1L', jam:'10:30'},
-    {warna:'kuning', teks:'Es Batu hampir habis — pesan sebelum jam 14.00', jam:'11:05'},
-    {warna:'biru',   teks:'Laporan harian otomatis terjadwal pukul 21.00 WIB', jam:'Jadwal'},
-  ];
-  const MENU = [
-    {nama:'Es Kopi Susu', pct:100, warna:'#1D9E75'},
-    {nama:'Kopi Hitam',   pct:74,  warna:'#3B82F6'},
-    {nama:'Matcha Latte', pct:53,  warna:'#8B5CF6'},
-    {nama:'Indomie Telur',pct:47,  warna:'#F59E0B'},
-    {nama:'Roti Bakar',   pct:27,  warna:'#6B7280'},
-  ];
-  const JAM = [
-    {h:'07',v:30},{h:'08',v:65},{h:'09',v:90},{h:'10',v:100},
-    {h:'11',v:75},{h:'12',v:50},{h:'13',v:55},{h:'14',v:80},
-    {h:'15',v:60},{h:'16',v:35},
-  ];
+  <script src="js/sidebar.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/sync.js"></script>
 
-  function renderStok() {
-    document.getElementById('stokList').innerHTML = STOK.map(s => `
+  <script>
+  // ── RENDER DASHBOARD ───────────────────────────────────────────
+  function renderDashboard() {
+    const barang = App.state.barang;
+    const trx    = App.state.transaksi;
+    const menus  = App.state.menus;
+
+    // Hitung metrik
+    const totalJual = trx.reduce((s,t) => s+t.total, 0);
+    const jumlahTrx = trx.length;
+    let   totalHPP  = 0;
+    trx.forEach(t => {
+      const m = menus.find(x => x.nama === t.menu);
+      if (m) totalHPP += App.hpp(m.id) * (t.qty||1);
+    });
+    const profit  = totalJual - totalHPP;
+    const margin  = totalJual > 0 ? ((profit/totalJual)*100).toFixed(1) : 0;
+
+    // Barang kritis
+    const kritis  = barang.filter(b => App.statusStok(b) !== 'aman');
+    const reorder = kritis.filter(b => App.statusStok(b) === 'reorder');
+
+    // Update metrik
+    document.getElementById('mJual').textContent     = App.rp(totalJual);
+    document.getElementById('mJualSub').textContent  = jumlahTrx + ' transaksi';
+    document.getElementById('mProfit').textContent   = App.rp(profit);
+    document.getElementById('mMargin').textContent   = 'Margin ' + margin + '%';
+    document.getElementById('mTrx').textContent      = jumlahTrx;
+    document.getElementById('mKritis').textContent   = reorder.length;
+    document.getElementById('mKritisSub').textContent= reorder.length > 0
+      ? reorder.length + ' wajib reorder sekarang' : 'semua stok aman';
+
+    // Badge alert
+    const badge = document.getElementById('badgeAlert');
+    if (kritis.length > 0) {
+      badge.textContent = kritis.length;
+      badge.style.display = 'inline-flex';
+    }
+
+    // List stok
+    const tampil = barang.slice(0, 8);
+    document.getElementById('listStok').innerHTML = tampil.map(b => {
+      const st  = App.statusStok(b);
+      const pct = Math.min(100, Math.round((b.stok / Math.max(b.min, 1)) * 100));
+      return `
       <div class="stok-item">
         <div class="stok-atas">
-          <span class="stok-nama">${s.nama}</span>
-          <span class="stok-qty">${s.qty}</span>
+          <span class="stok-nama">${b.nama}</span>
+          <span class="stok-qty">${App.angka(b.stok)} ${b.sat}</span>
         </div>
         <div class="stok-bawah">
-          <div class="stok-bar"><div class="stok-isi isi-${s.status}" style="width:${s.pct}%"></div></div>
-          <span class="stok-label label-${s.status}">${s.status === 'aman' ? 'Aman' : s.status === 'hampir' ? 'Hampir Habis' : 'Kritis!'}</span>
+          <div class="stok-bar">
+            <div class="stok-isi isi-${st}" style="width:${pct}%"></div>
+          </div>
+          <span class="stok-label label-${st}">
+            ${st==='aman'?'Aman':st==='hampir'?'Hampir Habis':'Kritis!'}
+          </span>
         </div>
-      </div>`).join('');
-  }
+      </div>`;
+    }).join('');
 
-  function renderAlert() {
-    document.getElementById('alertList').innerHTML = ALERT.map(a => `
+    // List alert
+    const alertItems = [];
+    reorder.forEach(b => alertItems.push({ warna:'merah', teks: b.nama + ' — wajib reorder sekarang!', jam: 'Sekarang' }));
+    kritis.filter(b => App.statusStok(b)==='hampir').forEach(b =>
+      alertItems.push({ warna:'kuning', teks: b.nama + ' — hampir habis', jam: 'Perhatian' }));
+    if (alertItems.length === 0)
+      alertItems.push({ warna:'hijau', teks: 'Semua stok dalam kondisi aman ✓', jam: '' });
+
+    document.getElementById('listAlert').innerHTML = alertItems.slice(0,6).map(a => `
       <div class="alert-item">
         <div class="alert-dot dot-${a.warna}"></div>
         <div class="alert-isi">
@@ -232,75 +224,85 @@
           <div class="alert-waktu">${a.jam}</div>
         </div>
       </div>`).join('');
-  }
 
-  function renderPareto() {
-    document.getElementById('paretoList').innerHTML = MENU.map((m,i) => `
-      <div class="pareto-item">
-        <span class="pareto-nama">${m.nama}</span>
-        <div class="pareto-rel">
-          <div class="pareto-isi" style="width:${m.pct}%;background:${m.warna}">
-            ${i===0?'Terlaris':''}
+    // Pareto menu dari transaksi
+    const menuMap = {};
+    trx.forEach(t => {
+      if (!menuMap[t.menu]) menuMap[t.menu] = { nama:t.menu, total:0, qty:0 };
+      menuMap[t.menu].total += t.total;
+      menuMap[t.menu].qty   += t.qty;
+    });
+    const topMenu = Object.values(menuMap).sort((a,b)=>b.total-a.total).slice(0,5);
+    const maxTotal = topMenu[0]?.total || 1;
+    const WARNA = ['#1D9E75','#3B82F6','#8B5CF6','#F59E0B','#6B7280'];
+
+    if (topMenu.length > 0) {
+      document.getElementById('listPareto').innerHTML = topMenu.map((m,i) => `
+        <div class="pareto-item">
+          <span class="pareto-nama">${m.nama}</span>
+          <div class="pareto-rel">
+            <div class="pareto-isi" style="width:${Math.round(m.total/maxTotal*100)}%;background:${WARNA[i]}">
+              ${m.qty} pcs
+            </div>
           </div>
-        </div>
-      </div>`).join('');
-  }
+          <span style="font-size:11px;color:var(--teks-2);min-width:70px;text-align:right;font-family:var(--mono);">
+            ${App.rp(m.total)}
+          </span>
+        </div>`).join('');
+    }
 
-  function renderJam() {
+    // Grafik jam (dummy data — akan diisi dari transaksi nyata)
+    const JAM = [
+      {h:'07',v:30},{h:'08',v:65},{h:'09',v:90},{h:'10',v:100},
+      {h:'11',v:75},{h:'12',v:50},{h:'13',v:55},{h:'14',v:80},
+      {h:'15',v:60},{h:'16',v:35},{h:'17',v:45},{h:'18',v:70},
+    ];
     document.getElementById('grafikJam').innerHTML = JAM.map(j => `
       <div class="bar-jam">
-        <div class="bar-isi ${j.v===100?'puncak':''}" style="height:${j.v}%"></div>
+        <div class="bar-isi${j.v===100?' puncak':''}" style="height:${j.v}%"></div>
         <span class="bar-label">${j.h}</span>
       </div>`).join('');
+
+    if (jumlahTrx > 0) {
+      document.getElementById('infoJam').textContent = 'Jam puncak berdasarkan ' + jumlahTrx + ' transaksi hari ini';
+    }
+
+    // Kesimpulan
+    const topNama = topMenu.slice(0,2).map(m=>m.nama).join(' & ') || '—';
+    document.getElementById('kesimpulan').innerHTML =
+      'Total penjualan hari ini <strong style="color:var(--hijau)">' + App.rp(totalJual) + '</strong>' +
+      ' dari <strong>' + jumlahTrx + ' transaksi</strong>' +
+      ' dengan keuntungan <strong style="color:var(--hijau)">' + App.rp(profit) + '</strong>' +
+      ' (margin ' + margin + '%). ' +
+      (topMenu.length ? 'Menu terlaris: <strong>' + topNama + '</strong>. ' : '') +
+      (reorder.length > 0
+        ? '<strong style="color:var(--merah)">' + reorder.length + ' bahan wajib reorder</strong>: '
+          + reorder.slice(0,3).map(b=>b.nama).join(', ') + '.'
+        : '<strong style="color:var(--hijau)">Semua stok aman ✓</strong>');
   }
 
+  // ── INIT ─────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    renderStok(); renderAlert(); renderPareto(); renderJam();
+    renderDashboard();
+
+    // Auto refresh dari Sheets
+    if (window.WarkopAPI?.isConfigured()) {
+      App.syncFromSheets().then(() => renderDashboard());
+      // Refresh setiap 60 detik
+      setInterval(() => {
+        App.syncFromSheets().then(() => renderDashboard());
+      }, 60000);
+    }
+
+    // Update badge reorder di nav
+    setTimeout(() => {
+      const badge = document.getElementById('navBadgeReorder');
+      if (badge) {
+        const k = App.state.barang.filter(b => App.statusStok(b) === 'reorder').length;
+        if (k > 0) { badge.textContent = k; badge.style.display = 'inline-flex'; }
+      }
+    }, 500);
   });
-</script>
-
-<script>
-// Inject info user & tombol logout di sidebar footer
-(function() {
-  const sess = sessionStorage.getItem('warkop_session');
-  if (!sess) return;
-  const s = JSON.parse(sess);
-  const isPages = window.location.pathname.includes('/pages/');
-  const usersHref = isPages ? 'users.html' : 'pages/users.html';
-
-  const badge = s.source === 'sheets'
-    ? '<span style="font-size:9px;background:rgba(29,158,117,.2);color:#5AC99A;padding:2px 6px;border-radius:999px;margin-left:4px;">● Sheets</span>'
-    : '<span style="font-size:9px;background:rgba(255,255,255,.06);color:#5C5850;padding:2px 6px;border-radius:999px;margin-left:4px;">○ Lokal</span>';
-
-  const footer = document.getElementById('sidebarBawah');
-  if (!footer) return;
-  footer.innerHTML = `
-    <div style="font-size:11px;color:var(--teks-redup);margin-bottom:7px;font-family:var(--mono);display:flex;align-items:center;flex-wrap:wrap;gap:3px;">
-      <span>${s.username}</span><span style="opacity:.4;">·</span><span>${s.role}</span>${badge}
-    </div>
-    <div style="display:flex;gap:6px;">
-      ${s.role === 'owner' ? `<a href="${usersHref}" style="flex:1;padding:7px 6px;background:rgba(255,255,255,.04);border:1px solid var(--garis-kuat);border-radius:var(--r-kecil);color:var(--teks-2);font-size:11px;font-weight:600;text-align:center;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">👥 User</a>` : ''}
-      <button onclick="WarkopAuth.logout()" style="flex:1;padding:7px 6px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:var(--r-kecil);color:#F87171;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s;" onmouseover="this.style.background='rgba(220,38,38,.2)'" onmouseout="this.style.background='rgba(220,38,38,.1)'">⏏ Keluar</button>
-    </div>
-  `;
-
-  // Sembunyikan elemen owner-only jika karyawan
-  if (s.role !== 'owner') {
-    document.querySelectorAll('.owner-only').forEach(el => {
-      if (el.tagName === 'A') { el.style.opacity='.3'; el.style.pointerEvents='none'; }
-      else el.style.display = 'none';
-    });
-  }
-  // Update label sidebar
-  const roleLabel = document.getElementById('roleLabel');
-  if (roleLabel) roleLabel.textContent = s.nama;
-  const rolePill = document.getElementById('rolePill');
-  if (rolePill) {
-    const dot = rolePill.querySelector('.s-dot');
-    if (dot) dot.style.background = s.role === 'owner' ? 'var(--hijau)' : '#93C5FD';
-    rolePill.style.color = s.role === 'owner' ? 'var(--hijau)' : '#93C5FD';
-  }
-})();
-</script>
+  </script>
 </body>
 </html>

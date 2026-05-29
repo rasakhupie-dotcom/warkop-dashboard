@@ -12,408 +12,369 @@
       --garis:rgba(255,255,255,0.07); --garis-kuat:rgba(255,255,255,0.13);
       --teks:#F0EDE6; --teks-2:#9C9890; --teks-redup:#5C5850;
       --font:'Plus Jakarta Sans',sans-serif; --mono:'Space Mono',monospace;
-      --r:10px; --r-besar:14px; --r-kecil:6px;
+      --r:10px;
     }
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-    html { height:100%; }
-    body {
-      font-family:var(--font);
-      background:var(--bg);
-      color:var(--teks);
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      position:relative;
-      overflow:hidden;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{height:100%;}
+    body{
+      font-family:var(--font);background:var(--bg);color:var(--teks);
+      min-height:100%;display:flex;align-items:center;justify-content:center;
+      padding:20px;overflow-y:auto;
     }
-    /* Latar dekoratif */
-    body::before {
-      content:'';
-      position:fixed; inset:0;
+    body::before{
+      content:'';position:fixed;inset:0;pointer-events:none;
       background:
-        radial-gradient(ellipse 65% 55% at 15% 85%, rgba(59,30,15,.45) 0%, transparent 60%),
-        radial-gradient(ellipse 45% 45% at 85% 15%, rgba(29,158,117,.07) 0%, transparent 60%);
-      pointer-events:none;
+        radial-gradient(ellipse 65% 55% at 15% 85%,rgba(59,30,15,.4) 0%,transparent 60%),
+        radial-gradient(ellipse 45% 45% at 85% 15%,rgba(29,158,117,.06) 0%,transparent 60%);
     }
-    .grid-bg {
-      position:fixed; inset:0;
-      background-image:
-        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
-      background-size:44px 44px;
-      pointer-events:none;
-    }
-    .kotak {
-      width:100%; max-width:420px;
-      position:relative; z-index:10;
-    }
+    .wrap{width:100%;max-width:420px;position:relative;z-index:1;}
+
     /* Brand */
-    .brand { text-align:center; margin-bottom:28px; }
-    .brand-ikon {
-      width:66px; height:66px;
-      background:linear-gradient(135deg, #3D2B1F, #6B4226);
-      border-radius:18px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:32px;
-      margin:0 auto 14px;
-      box-shadow:0 8px 24px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
-    }
-    .brand-nama { font-family:var(--mono); font-size:22px; font-weight:700; display:block; letter-spacing:.04em; }
-    .brand-sub  { font-size:13px; color:var(--teks-2); margin-top:4px; display:block; }
-    /* Kartu login */
-    .kartu-login {
-      background:var(--bg-kartu);
-      border:1px solid var(--garis-kuat);
-      border-radius:var(--r-besar);
-      padding:28px;
-      box-shadow:0 20px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04);
-    }
-    .kartu-judul { font-size:18px; font-weight:700; margin-bottom:5px; letter-spacing:-.01em; }
-    .kartu-sub   { font-size:13px; color:var(--teks-2); margin-bottom:24px; }
+    .brand{text-align:center;margin-bottom:28px;}
+    .brand-ikon{width:66px;height:66px;background:linear-gradient(135deg,#3D2B1F,#6B4226);
+      border-radius:18px;display:flex;align-items:center;justify-content:center;
+      font-size:32px;margin:0 auto 14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);}
+    .brand-nama{font-family:var(--mono);font-size:22px;font-weight:700;display:block;letter-spacing:.04em;}
+    .brand-sub{font-size:13px;color:var(--teks-2);margin-top:4px;display:block;}
+
+    /* Kartu */
+    .kartu{background:var(--bg-kartu);border:1px solid var(--garis-kuat);
+      border-radius:14px;padding:28px;
+      box-shadow:0 20px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04);}
+    .kartu-judul{font-size:18px;font-weight:700;margin-bottom:5px;}
+    .kartu-sub{font-size:13px;color:var(--teks-2);margin-bottom:24px;}
+
     /* Tab role */
-    .role-tab-wrap {
-      display:grid; grid-template-columns:1fr 1fr;
-      gap:6px; margin-bottom:22px;
-      background:var(--bg-input); padding:4px; border-radius:var(--r);
-    }
-    .role-tab {
-      padding:10px; border-radius:7px; border:none;
-      background:transparent; color:var(--teks-2);
-      font-family:var(--font); font-size:13px; font-weight:600;
-      cursor:pointer; transition:all .18s;
-      display:flex; align-items:center; justify-content:center; gap:7px;
-    }
-    .role-tab.aktif {
-      background:var(--bg-kartu);
-      box-shadow:0 2px 8px rgba(0,0,0,.3), 0 0 0 1px rgba(255,255,255,.07);
-    }
-    .role-tab.aktif.owner   { color:var(--hijau); }
-    .role-tab.aktif.karyawan{ color:#93C5FD; }
-    /* Input */
-    .grup { margin-bottom:14px; }
-    .label { display:block; font-size:11px; font-weight:700; color:var(--teks-2); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px; }
-    .input-wrap { position:relative; }
-    .input-wrap input {
-      width:100%; background:var(--bg-input);
-      border:1px solid var(--garis-kuat); border-radius:var(--r);
-      padding:12px 44px 12px 14px; font-size:14px;
-      color:var(--teks); font-family:var(--font); outline:none;
-      transition:border-color .18s, box-shadow .18s;
-    }
-    .input-wrap input:focus { border-color:var(--hijau); box-shadow:0 0 0 3px rgba(29,158,117,.14); }
-    .input-ikon { position:absolute; right:13px; top:50%; transform:translateY(-50%); color:var(--teks-redup); font-size:16px; cursor:pointer; }
-    /* Alert */
-    .alert { padding:10px 14px; border-radius:var(--r-kecil); font-size:12px; font-weight:600; margin-bottom:14px; display:none; align-items:center; gap:8px; }
-    .alert.tampil { display:flex; }
-    .alert.galat  { background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.25); color:#F87171; }
-    .alert.peringatan { background:rgba(217,119,6,.12); border:1px solid rgba(217,119,6,.25); color:#FCD34D; }
-    /* Tombol masuk */
-    .btn-masuk {
-      width:100%; padding:13px; background:var(--hijau);
-      color:#fff; border:none; border-radius:var(--r);
-      font-family:var(--font); font-size:14px; font-weight:700;
-      cursor:pointer; transition:all .18s;
-      display:flex; align-items:center; justify-content:center; gap:8px;
-      margin-top:6px; letter-spacing:-.01em;
-    }
-    .btn-masuk:hover { background:#16875F; transform:translateY(-1px); box-shadow:0 4px 16px rgba(29,158,117,.28); }
-    .btn-masuk:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    .role-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;
+      margin-bottom:20px;background:var(--bg-input);padding:4px;border-radius:var(--r);}
+    .tab-role{padding:10px;border-radius:7px;border:none;background:transparent;
+      color:var(--teks-2);font-family:var(--font);font-size:13px;font-weight:600;
+      cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;}
+    .tab-role.aktif{background:var(--bg-kartu);
+      box-shadow:0 2px 8px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.07);}
+    .tab-role.aktif.owner{color:var(--hijau);}
+    .tab-role.aktif.karyawan{color:#93C5FD;}
+
     /* Indikator Sheets */
-    .ind-sheets { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12px; color:var(--teks-redup); }
-    .ind-dot { width:8px; height:8px; border-radius:50%; background:var(--teks-redup); flex-shrink:0; }
-    /* Akun default */
-    .akun-default { margin-top:18px; padding:14px; background:var(--bg-input); border:1px solid var(--garis); border-radius:var(--r); }
-    .akun-judul { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--teks-redup); margin-bottom:10px; }
-    .akun-baris { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid var(--garis); }
-    .akun-baris:last-child { border-bottom:none; }
-    .akun-label { width:80px; font-size:11px; color:var(--teks-redup); }
-    .akun-btn {
-      flex:1; padding:5px 10px; background:var(--bg-kartu);
-      border:1px solid var(--garis-kuat); border-radius:5px;
-      color:var(--teks-2); font-size:11px; font-family:var(--mono);
-      cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:6px;
-    }
-    .akun-btn:hover { border-color:var(--hijau); color:var(--teks); }
-    .akun-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .ind{display:flex;align-items:center;gap:7px;margin-bottom:14px;
+      font-size:12px;color:var(--teks-redup);}
+    .ind-dot{width:8px;height:8px;border-radius:50%;background:var(--teks-redup);flex-shrink:0;}
+
     /* Lockout */
-    .lockout { display:none; align-items:center; gap:8px; padding:10px 14px; background:rgba(220,38,38,.08); border:1px solid rgba(220,38,38,.2); border-radius:var(--r-kecil); color:#F87171; font-size:12px; margin-bottom:12px; }
-    .lockout.tampil { display:flex; }
+    .lockout{display:none;align-items:center;gap:8px;padding:10px 14px;
+      background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);
+      border-radius:var(--r);color:#F87171;font-size:12px;margin-bottom:12px;}
+    .lockout.tampil{display:flex;}
+
+    /* Alert */
+    .alert-box{padding:10px 14px;border-radius:var(--r);font-size:12px;
+      font-weight:600;margin-bottom:14px;display:none;align-items:center;gap:8px;}
+    .alert-box.tampil{display:flex;}
+    .alert-galat{background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.25);color:#F87171;}
+
+    /* Form */
+    .grup{margin-bottom:14px;}
+    .lbl{display:block;font-size:11px;font-weight:700;color:var(--teks-2);
+      text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+    .inp-wrap{position:relative;}
+    .inp-wrap input{width:100%;background:var(--bg-input);border:1px solid var(--garis-kuat);
+      border-radius:var(--r);padding:12px 44px 12px 14px;font-size:14px;
+      color:var(--teks);font-family:var(--font);outline:none;
+      transition:border-color .18s,box-shadow .18s;}
+    .inp-wrap input:focus{border-color:var(--hijau);box-shadow:0 0 0 3px rgba(29,158,117,.14);}
+    .inp-ikon{position:absolute;right:13px;top:50%;transform:translateY(-50%);
+      color:var(--teks-redup);font-size:16px;cursor:pointer;user-select:none;}
+
+    /* Tombol */
+    .btn-masuk{width:100%;padding:13px;background:var(--hijau);color:#fff;
+      border:none;border-radius:var(--r);font-family:var(--font);font-size:14px;
+      font-weight:700;cursor:pointer;transition:all .18s;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      letter-spacing:-.01em;margin-top:6px;}
+    .btn-masuk:hover{background:#16875F;transform:translateY(-1px);
+      box-shadow:0 4px 16px rgba(29,158,117,.28);}
+    .btn-masuk:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
     /* Spinner */
-    .spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,.25); border-top-color:#fff; border-radius:50%; animation:putar .7s linear infinite; display:none; }
-    @keyframes putar { to { transform:rotate(360deg); } }
-    .catatan { text-align:center; margin-top:18px; font-size:11px; color:var(--teks-redup); line-height:1.6; }
-    /* Modal ganti password */
-    .modal-latar { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:999; align-items:center; justify-content:center; padding:20px; display:none; }
-    .modal-latar.tampil { display:flex; }
-    .modal-kotak { background:var(--bg-kartu); border:1px solid var(--garis-kuat); border-radius:var(--r-besar); padding:28px; width:400px; max-width:100%; }
-    .modal-judul { font-size:16px; font-weight:700; margin-bottom:6px; }
-    .modal-sub { font-size:12px; color:var(--teks-2); margin-bottom:18px; line-height:1.6; }
-    .modal-grup { margin-bottom:12px; }
-    .modal-btn { width:100%; padding:12px; background:var(--hijau); color:#fff; border:none; border-radius:var(--r); font-size:14px; font-weight:700; cursor:pointer; font-family:var(--font); margin-top:4px; }
-    code { background:rgba(255,255,255,.07); padding:2px 7px; border-radius:4px; font-family:var(--mono); font-size:11px; }
+    .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);
+      border-top-color:#fff;border-radius:50%;
+      animation:putar .7s linear infinite;display:none;}
+    @keyframes putar{to{transform:rotate(360deg);}}
+
+    /* Default akun */
+    .akun-box{margin-top:18px;padding:14px;background:var(--bg-input);
+      border:1px solid var(--garis);border-radius:var(--r);}
+    .akun-judul{font-size:10px;font-weight:700;text-transform:uppercase;
+      letter-spacing:.08em;color:var(--teks-redup);margin-bottom:10px;}
+    .akun-baris{display:flex;align-items:center;gap:8px;padding:5px 0;
+      border-bottom:1px solid var(--garis);}
+    .akun-baris:last-child{border-bottom:none;}
+    .akun-lbl{width:80px;font-size:11px;color:var(--teks-redup);}
+    .akun-btn{flex:1;padding:5px 10px;background:var(--bg-kartu);
+      border:1px solid var(--garis-kuat);border-radius:5px;
+      color:var(--teks-2);font-size:11px;font-family:var(--mono);
+      cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;}
+    .akun-btn:hover{border-color:var(--hijau);color:var(--teks);}
+    .akun-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+    .catatan{text-align:center;margin-top:18px;font-size:11px;
+      color:var(--teks-redup);line-height:1.6;}
+
+    /* Debug info (akan disembunyikan di produksi) */
+    .debug-box{margin-top:12px;padding:10px;background:rgba(59,130,246,.08);
+      border:1px solid rgba(59,130,246,.2);border-radius:var(--r);
+      font-size:11px;color:#93C5FD;font-family:var(--mono);display:none;}
+    .debug-box.tampil{display:block;}
   </style>
 </head>
 <body>
-<div class="grid-bg"></div>
-<div class="kotak">
+<div class="wrap">
   <div class="brand">
     <div class="brand-ikon">☕</div>
     <span class="brand-nama">WarkopPOS</span>
     <span class="brand-sub">Sistem Stok Opname & Kasir</span>
   </div>
 
-  <div class="kartu-login">
+  <div class="kartu">
     <div class="kartu-judul">Selamat Datang!</div>
-    <div class="kartu-sub">Pilih jabatan dan masukkan kata sandi untuk masuk.</div>
+    <div class="kartu-sub">Pilih jabatan lalu masukkan username dan password.</div>
 
     <!-- Pilih role -->
-    <div class="role-tab-wrap">
-      <button class="role-tab aktif owner" id="tabOwner" onclick="pilihRole('owner')">
+    <div class="role-tabs">
+      <button class="tab-role aktif owner" id="tabOwner" onclick="pilihRole('owner')">
         👑 Pemilik
       </button>
-      <button class="role-tab karyawan" id="tabKary" onclick="pilihRole('karyawan')">
+      <button class="tab-role karyawan" id="tabKary" onclick="pilihRole('karyawan')">
         👤 Karyawan
       </button>
     </div>
 
-    <!-- Status Google Sheets -->
-    <div class="ind-sheets">
+    <!-- Status koneksi Sheets -->
+    <div class="ind">
       <div class="ind-dot" id="indDot"></div>
       <span id="indLabel">Mengecek koneksi...</span>
     </div>
 
     <!-- Lockout -->
     <div class="lockout" id="lockoutBar">
-      🔒 Terlalu banyak percobaan. Coba lagi dalam <strong id="lockoutHitung"></strong> detik.
+      🔒 Terlalu banyak percobaan. Coba lagi dalam
+      <strong id="lockoutHitung">—</strong> detik.
     </div>
 
     <!-- Alert error -->
-    <div class="alert galat" id="alertBox">
-      <span id="alertPesan">—</span>
+    <div class="alert-box alert-galat" id="alertBox">
+      <span id="alertPesan"></span>
     </div>
 
     <!-- Form -->
     <form onsubmit="masuk(event)">
       <div class="grup">
-        <label class="label">Username</label>
-        <div class="input-wrap">
-          <input type="text" id="inUsername" placeholder="Masukkan username" autocomplete="username" autocapitalize="none" spellcheck="false" required/>
-          <span class="input-ikon">👤</span>
+        <label class="lbl">Username</label>
+        <div class="inp-wrap">
+          <input type="text" id="inUser" placeholder="Masukkan username"
+            autocomplete="username" autocapitalize="none" spellcheck="false" required/>
+          <span class="inp-ikon">👤</span>
         </div>
       </div>
       <div class="grup">
-        <label class="label">Password</label>
-        <div class="input-wrap">
-          <input type="password" id="inPassword" placeholder="Masukkan password" autocomplete="current-password" required/>
-          <span class="input-ikon" id="ikonPw" onclick="lihatPw()" style="cursor:pointer;">👁</span>
+        <label class="lbl">Password</label>
+        <div class="inp-wrap">
+          <input type="password" id="inPass" placeholder="Masukkan password"
+            autocomplete="current-password" required/>
+          <span class="inp-ikon" id="ikonMata" onclick="lihatPassword()" title="Tampilkan/sembunyikan">👁</span>
         </div>
       </div>
       <button type="submit" class="btn-masuk" id="btnMasuk">
         <div class="spinner" id="spinner"></div>
-        <span id="teksBtn">Masuk →</span>
+        <span id="teksBtn">Masuk ke Dashboard →</span>
       </button>
     </form>
 
-    <!-- Akun default (hint) -->
-    <div class="akun-default">
+    <!-- Default akun -->
+    <div class="akun-box">
       <div class="akun-judul">Login Pertama Kali — Klik untuk isi otomatis</div>
       <div class="akun-baris">
-        <span class="akun-label">Pemilik</span>
-        <button class="akun-btn" onclick="isiAkun('owner','owner123')">
-          <span class="akun-dot" style="background:var(--hijau);"></span>
+        <span class="akun-lbl">Pemilik</span>
+        <button class="akun-btn" type="button" onclick="isiAkun('owner','owner123')">
+          <span class="akun-dot" style="background:var(--hijau)"></span>
           owner / owner123
         </button>
       </div>
       <div class="akun-baris">
-        <span class="akun-label">Karyawan</span>
-        <button class="akun-btn" onclick="isiAkun('karyawan1','karyawan123')">
-          <span class="akun-dot" style="background:#93C5FD;"></span>
+        <span class="akun-lbl">Karyawan</span>
+        <button class="akun-btn" type="button" onclick="isiAkun('karyawan1','karyawan123')">
+          <span class="akun-dot" style="background:#93C5FD"></span>
           karyawan1 / karyawan123
         </button>
       </div>
     </div>
+
+    <!-- Debug (aktifkan jika perlu troubleshoot) -->
+    <div class="debug-box" id="debugBox"></div>
   </div>
 
   <div class="catatan">
-    Setelah masuk pertama kali, segera ganti password default.<br/>
+    Setelah masuk, segera ganti password di menu Kelola Pengguna.<br/>
     Sesi otomatis berakhir setelah 8 jam tidak aktif.
   </div>
 </div>
 
-<!-- Modal Wajib Ganti Password -->
-<div class="modal-latar" id="modalGantiPw">
-  <div class="modal-kotak">
-    <div class="modal-judul">🔐 Ganti Password</div>
-    <div class="modal-sub">Untuk keamanan, kamu wajib mengganti password default sebelum melanjutkan. Minimal 6 karakter.</div>
-    <div class="modal-grup">
-      <label class="label">Password Baru</label>
-      <input type="password" id="pwBaru1" placeholder="Min. 6 karakter" style="width:100%;background:var(--bg-input);border:1px solid var(--garis-kuat);border-radius:var(--r);padding:11px 14px;font-size:14px;color:var(--teks);font-family:var(--font);outline:none;"/>
-    </div>
-    <div class="modal-grup">
-      <label class="label">Konfirmasi Password Baru</label>
-      <input type="password" id="pwBaru2" placeholder="Ulangi password baru" style="width:100%;background:var(--bg-input);border:1px solid var(--garis-kuat);border-radius:var(--r);padding:11px 14px;font-size:14px;color:var(--teks);font-family:var(--font);outline:none;"/>
-    </div>
-    <div id="alertGantiPw" style="display:none;padding:10px;border-radius:var(--r-kecil);font-size:12px;font-weight:600;margin-bottom:10px;"></div>
-    <button class="modal-btn" onclick="simpanGantiPw()">Simpan & Lanjut →</button>
-  </div>
-</div>
-
+<!-- PENTING: auth.js dimuat TANPA guard redirect di sini -->
 <script src="js/auth.js"></script>
 <script>
-  // Jika sudah login, langsung ke dashboard
-  if (WarkopAuth.isLoggedIn()) window.location.href = 'index.html';
+// ── CEK: jika sudah login, langsung ke dashboard ──────────────────
+// (tidak lewat guard() agar tidak ada loop redirect)
+document.addEventListener('DOMContentLoaded', () => {
+  if (WarkopAuth.isLoggedIn()) {
+    window.location.href = 'index.html';
+    return;
+  }
+  cekKoneksiSheets();
+});
 
-  let rolePilih = 'owner';
-  let sessionPending = null;
-  let timerLockout = null;
-
-  // Cek status Google Sheets
-  (function cekSheets() {
-    const url = localStorage.getItem('warkop_api_url');
-    const dot = document.getElementById('indDot');
-    const lbl = document.getElementById('indLabel');
-    if (!url) {
+// ── CEK KONEKSI GOOGLE SHEETS ─────────────────────────────────────
+function cekKoneksiSheets() {
+  const url = localStorage.getItem('warkop_api_url');
+  const dot = document.getElementById('indDot');
+  const lbl = document.getElementById('indLabel');
+  if (!url) {
+    dot.style.background = '#5C5850';
+    lbl.textContent = 'Mode Lokal — data tersimpan di browser ini';
+    return;
+  }
+  dot.style.background = '#D97706';
+  lbl.textContent = 'Menghubungi Google Sheets...';
+  fetch(url + '?action=ping', { redirect: 'follow' })
+    .then(r => r.json())
+    .then(j => {
+      if (j.ok) {
+        dot.style.background = '#1D9E75';
+        dot.style.boxShadow  = '0 0 6px #1D9E75';
+        lbl.textContent = '✓ Google Sheets terhubung — login multi-device aktif';
+        lbl.style.color = '#1D9E75';
+      } else throw new Error();
+    })
+    .catch(() => {
       dot.style.background = '#5C5850';
-      lbl.textContent = 'Mode Lokal — hubungkan Google Sheets untuk multi-device';
-      return;
-    }
-    dot.style.background = '#D97706';
-    lbl.textContent = 'Menghubungi Google Sheets...';
-    fetch(url + '?action=ping', { redirect: 'follow' })
-      .then(r => r.json())
-      .then(j => {
-        if (j.ok) {
-          dot.style.background = '#1D9E75';
-          dot.style.boxShadow  = '0 0 6px #1D9E75';
-          lbl.textContent = 'Google Sheets terhubung — login multi-device aktif ✓';
-          lbl.style.color = '#1D9E75';
-        } else throw new Error();
-      })
-      .catch(() => {
-        dot.style.background = '#5C5850';
-        lbl.textContent = 'Offline — login lokal (data tersimpan di browser ini)';
-      });
-  })();
+      lbl.textContent = 'Offline — login lokal (data tersimpan di browser ini)';
+    });
+}
 
-  function pilihRole(role) {
-    rolePilih = role;
-    document.getElementById('tabOwner').className = 'role-tab' + (role==='owner' ? ' aktif owner' : '');
-    document.getElementById('tabKary').className  = 'role-tab' + (role==='karyawan' ? ' aktif karyawan' : '');
-    const u = document.getElementById('inUsername');
-    if (!u.value) u.value = role === 'owner' ? 'owner' : 'karyawan1';
-    sembunyikanAlert();
-  }
+// ── UI HELPERS ────────────────────────────────────────────────────
+let rolePilih = 'owner';
+let timerLock = null;
 
-  function isiAkun(user, pw) {
-    document.getElementById('inUsername').value = user;
-    document.getElementById('inPassword').value = pw;
-    rolePilih = user === 'owner' ? 'owner' : 'karyawan';
-    pilihRole(rolePilih);
-  }
+function pilihRole(role) {
+  rolePilih = role;
+  document.getElementById('tabOwner').className = 'tab-role' + (role==='owner' ? ' aktif owner' : '');
+  document.getElementById('tabKary').className  = 'tab-role' + (role==='karyawan' ? ' aktif karyawan' : '');
+  const u = document.getElementById('inUser');
+  if (!u.value) u.value = role === 'owner' ? 'owner' : 'karyawan1';
+  sembunyikanAlert();
+}
 
-  function lihatPw() {
-    const el = document.getElementById('inPassword');
-    const ikon = document.getElementById('ikonPw');
-    el.type = el.type === 'password' ? 'text' : 'password';
-    ikon.textContent = el.type === 'password' ? '👁' : '🙈';
-  }
+function isiAkun(user, pw) {
+  document.getElementById('inUser').value = user;
+  document.getElementById('inPass').value = pw;
+  rolePilih = user === 'owner' ? 'owner' : 'karyawan';
+  pilihRole(rolePilih);
+}
 
-  function tampilAlert(pesan) {
-    const el = document.getElementById('alertBox');
-    document.getElementById('alertPesan').textContent = pesan;
-    el.classList.add('tampil');
-  }
-  function sembunyikanAlert() { document.getElementById('alertBox').classList.remove('tampil'); }
+function lihatPassword() {
+  const el   = document.getElementById('inPass');
+  const ikon = document.getElementById('ikonMata');
+  el.type = el.type === 'password' ? 'text' : 'password';
+  ikon.textContent = el.type === 'password' ? '👁' : '🙈';
+}
 
-  function setLoading(on) {
-    const btn = document.getElementById('btnMasuk');
-    const sp  = document.getElementById('spinner');
-    const teks= document.getElementById('teksBtn');
-    btn.disabled = on;
-    sp.style.display = on ? 'block' : 'none';
-    teks.textContent = on ? 'Memverifikasi...' : 'Masuk →';
-  }
+function tampilAlert(pesan) {
+  const el = document.getElementById('alertBox');
+  document.getElementById('alertPesan').textContent = pesan;
+  el.classList.add('tampil');
+}
+function sembunyikanAlert() {
+  document.getElementById('alertBox').classList.remove('tampil');
+}
 
-  function mulaiLockout(detik) {
-    const bar = document.getElementById('lockoutBar');
-    const hit = document.getElementById('lockoutHitung');
-    bar.classList.add('tampil');
-    document.getElementById('btnMasuk').disabled = true;
-    let s = detik;
+function log(msg) {
+  const el = document.getElementById('debugBox');
+  // Aktifkan baris ini untuk debug:
+  // el.classList.add('tampil');
+  // el.textContent += '\n' + msg;
+  console.log('[Login]', msg);
+}
+
+function setLoading(on) {
+  const btn = document.getElementById('btnMasuk');
+  document.getElementById('spinner').style.display = on ? 'block' : 'none';
+  document.getElementById('teksBtn').textContent = on ? 'Memverifikasi...' : 'Masuk ke Dashboard →';
+  btn.disabled = on;
+}
+
+function mulaiLockout(detik) {
+  const bar = document.getElementById('lockoutBar');
+  const hit = document.getElementById('lockoutHitung');
+  bar.classList.add('tampil');
+  document.getElementById('btnMasuk').disabled = true;
+  let s = detik;
+  hit.textContent = s;
+  clearInterval(timerLock);
+  timerLock = setInterval(() => {
+    s--;
     hit.textContent = s;
-    clearInterval(timerLockout);
-    timerLockout = setInterval(() => {
-      s--;
-      hit.textContent = s;
-      if (s <= 0) {
-        clearInterval(timerLockout);
-        bar.classList.remove('tampil');
-        document.getElementById('btnMasuk').disabled = false;
-      }
-    }, 1000);
-  }
-
-  async function masuk(e) {
-    e.preventDefault();
-    const username = document.getElementById('inUsername').value.trim();
-    const password = document.getElementById('inPassword').value;
-    sembunyikanAlert();
-
-    if (!username || !password) { tampilAlert('Username dan password wajib diisi.'); return; }
-
-    const kunci = WarkopAuth.isLockedOut(username);
-    if (kunci > 0) { mulaiLockout(kunci); return; }
-
-    setLoading(true);
-    try {
-      const hasil = await WarkopAuth.login(username, password);
-      if (!hasil.ok) {
-        tampilAlert(hasil.error);
-        const kunciBaru = WarkopAuth.isLockedOut(username);
-        if (kunciBaru > 0) mulaiLockout(kunciBaru);
-        return;
-      }
-      WarkopAuth.resetFailedAttempts(username);
-      sessionPending = hasil;
-
-      if (hasil.mustChangePassword) {
-        document.getElementById('modalGantiPw').classList.add('tampil');
-      } else {
-        window.location.href = 'index.html';
-      }
-    } catch(err) {
-      tampilAlert('Terjadi kesalahan. Coba lagi.');
-      console.error(err);
-    } finally {
-      setLoading(false);
+    if (s <= 0) {
+      clearInterval(timerLock);
+      bar.classList.remove('tampil');
+      document.getElementById('btnMasuk').disabled = false;
     }
+  }, 1000);
+}
+
+// ── PROSES LOGIN ──────────────────────────────────────────────────
+async function masuk(e) {
+  e.preventDefault();
+  const username = document.getElementById('inUser').value.trim();
+  const password = document.getElementById('inPass').value;
+  sembunyikanAlert();
+
+  if (!username || !password) {
+    tampilAlert('Username dan password wajib diisi.');
+    return;
   }
 
-  async function simpanGantiPw() {
-    const p1 = document.getElementById('pwBaru1').value;
-    const p2 = document.getElementById('pwBaru2').value;
-    const al = document.getElementById('alertGantiPw');
-    const err = m => { al.style.display='block'; al.style.background='rgba(220,38,38,.12)'; al.style.color='#F87171'; al.textContent=m; };
+  // Cek lockout
+  const kunci = WarkopAuth.isLockedOut(username);
+  if (kunci > 0) { mulaiLockout(kunci); return; }
 
-    if (p1.length < 6) { err('Password minimal 6 karakter.'); return; }
-    if (p1 !== p2)     { err('Password tidak cocok, coba lagi.'); return; }
+  setLoading(true);
+  log('Mencoba login: ' + username);
 
-    // Password default berdasarkan role
-    const pwDefault = sessionPending?.user?.role === 'owner' ? 'owner123' : 'karyawan123';
-    const hasil = await WarkopAuth.changePassword(sessionPending.session.username, pwDefault, p1);
+  try {
+    const hasil = await WarkopAuth.login(username, password);
+    log('Hasil login: ' + JSON.stringify({ ok: hasil.ok, source: hasil.source }));
 
     if (!hasil.ok) {
-      // Sudah diganti sebelumnya — tetap bisa lanjut
-      al.style.display='block'; al.style.background='rgba(29,158,117,.12)'; al.style.color='#5AC99A';
-      al.textContent = '✅ Melanjutkan...';
-    } else {
-      al.style.display='block'; al.style.background='rgba(29,158,117,.12)'; al.style.color='#5AC99A';
-      al.textContent = '✅ Password berhasil diubah!';
+      tampilAlert(hasil.error || 'Login gagal. Periksa username dan password.');
+      const kunciBaru = WarkopAuth.isLockedOut(username);
+      if (kunciBaru > 0) mulaiLockout(kunciBaru);
+      return;
     }
-    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+
+    // Login berhasil!
+    WarkopAuth.resetFailedAttempts(username);
+    log('Login berhasil! Redirect ke index.html...');
+
+    // Langsung ke dashboard tanpa paksa ganti password
+    window.location.href = 'index.html';
+
+  } catch(err) {
+    log('Error: ' + err.message);
+    tampilAlert('Terjadi kesalahan. Coba lagi.');
+  } finally {
+    setLoading(false);
   }
+}
 </script>
 </body>
 </html>

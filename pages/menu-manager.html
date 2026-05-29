@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>WarkopPOS — Kelola Menu</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <script>
+    // Auth guard
+    (function(){
+      var s=sessionStorage.getItem('warkop_session');
+      if(!s){window.location.href='../login.html';return;}
+      try{var d=JSON.parse(s);if(Date.now()>d.expiresAt){sessionStorage.removeItem('warkop_session');window.location.href='../login.html';}}
+      catch(e){window.location.href='../login.html';}
+    })();
+  </script>
+  <style>
+    .modal-latar{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;
+      display:flex;align-items:center;justify-content:center;padding:16px;
+      opacity:0;pointer-events:none;transition:opacity .2s;}
+    .modal-latar.terbuka{opacity:1;pointer-events:all;}
+    .modal-kotak{background:var(--bg-kartu);border:1px solid var(--garis-kuat);
+      border-radius:var(--r-besar);padding:24px;width:520px;max-width:100%;
+      max-height:90vh;overflow-y:auto;
+      transform:translateY(16px);transition:transform .22s;}
+    .modal-latar.terbuka .modal-kotak{transform:translateY(0);}
+    .emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:6px;}
+    .emoji-btn{padding:8px;border-radius:6px;border:1px solid var(--garis);
+      background:var(--bg-input);font-size:18px;cursor:pointer;text-align:center;
+      transition:all .15s;}
+    .emoji-btn:hover,.emoji-btn.aktif{border-color:var(--hijau);background:var(--hijau-muda);}
+    .bom-item{display:flex;align-items:center;gap:8px;padding:8px 10px;
+      background:var(--bg-input);border-radius:var(--r-kecil);margin-bottom:6px;}
+    .bom-nama{flex:1;font-size:12px;font-weight:600;}
+    .bom-qty{width:70px;font-family:var(--mono);font-size:12px;}
+    .tag-aktif{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
+      border-radius:999px;font-size:10px;font-weight:700;}
+  </style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="s-brand">
+    <div class="s-ikon">☕</div>
+    <div><span class="s-nama">WarkopPOS</span><span class="s-sub">Kelola Menu</span></div>
+  </div>
+  <div class="s-pengguna" id="rolePill"><span class="s-dot"></span><span id="roleLabel">—</span></div>
+  <nav class="nav">
+    <div class="nav-judul">Utama</div>
+    <a href="../index.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/></svg>Dashboard
+    </a>
+    <a href="pos.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/></svg>Kasir POS
+    </a>
+    <a href="opname.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/></svg>Stok Opname
+    </a>
+    <div class="nav-judul">Manajemen</div>
+    <a href="menu-manager.html" class="nav-item aktif owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Kelola Menu
+    </a>
+    <a href="barang.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4z" clip-rule="evenodd"/></svg>Master Barang
+    </a>
+    <a href="bom.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>Bill of Material
+    </a>
+    <div class="nav-judul">Laporan</div>
+    <a href="reorder.html" class="nav-item">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/></svg>Reorder Point
+    </a>
+    <a href="laporan.html" class="nav-item owner-only">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6z" clip-rule="evenodd"/></svg>Laporan Harian
+    </a>
+  </nav>
+  <div class="s-bawah" id="sidebarBawah"></div>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<main class="main">
+  <header class="topbar">
+    <div class="t-kiri">
+      <button class="tombol-menu" onclick="App.toggleSidebar()"><span></span><span></span><span></span></button>
+      <h1 class="t-judul">🍽 Kelola Menu Kasir</h1>
+    </div>
+    <div class="t-kanan">
+      <span class="t-jam" id="jam">—</span>
+      <button class="btn btn-hijau btn-kecil owner-only" onclick="bukaModalTambah()">+ Tambah Menu</button>
+    </div>
+  </header>
+
+  <div class="konten">
+    <!-- INFO -->
+    <div class="kartu muncul" style="--tunda:0ms;padding:14px 18px;margin-bottom:14px;background:var(--hijau-muda);border-color:rgba(29,158,117,.3);">
+      <div style="font-size:13px;color:var(--teks);line-height:1.7;">
+        💡 <strong>Cara kelola menu:</strong>
+        Tambah menu baru → isi nama, harga, emoji, dan bahan baku (BOM) → Simpan.
+        Menu akan langsung muncul di <strong>Kasir POS</strong>.
+        Nonaktifkan menu agar tidak muncul di kasir tanpa menghapus datanya.
+      </div>
+    </div>
+
+    <!-- GRID KARTU MENU -->
+    <div id="gridMenu" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;"></div>
+  </div>
+</main>
+
+<!-- MODAL TAMBAH / EDIT MENU -->
+<div class="modal-latar" id="modalMenu" onclick="tutupModalLuar(event)">
+  <div class="modal-kotak">
+    <div style="font-size:16px;font-weight:700;margin-bottom:18px;" id="judulModal">Tambah Menu Baru</div>
+
+    <!-- Emoji picker -->
+    <div class="form-grup" style="margin-bottom:12px;">
+      <label class="form-label">Pilih Ikon Menu</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+        <div id="emojiPreview" style="width:48px;height:48px;background:var(--bg-input);border-radius:10px;
+          display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid var(--garis-kuat);">☕</div>
+        <input id="f_emoji" maxlength="2" placeholder="Atau ketik emoji"
+          style="width:80px;font-size:20px;text-align:center;" oninput="ubahEmoji(this.value)"/>
+      </div>
+      <div class="emoji-grid" id="emojiGrid"></div>
+    </div>
+
+    <div class="form-baris">
+      <div class="form-grup">
+        <label class="form-label">Nama Menu</label>
+        <input id="f_nama" placeholder="Contoh: Es Kopi Susu"/>
+      </div>
+      <div class="form-grup">
+        <label class="form-label">Harga Jual (Rp)</label>
+        <input id="f_harga" type="number" placeholder="18000" min="0"/>
+      </div>
+    </div>
+
+    <!-- BOM / Komposisi Bahan -->
+    <div class="form-grup" style="margin-bottom:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <label class="form-label" style="margin:0;">Bahan Baku (BOM)</label>
+        <button class="btn btn-kecil btn-hijau" type="button" onclick="tambahBomRow()">+ Tambah Bahan</button>
+      </div>
+      <div style="background:var(--bg-elevated,var(--bg-input));border-radius:var(--r-kecil);padding:10px;
+        font-size:11px;color:var(--teks-2);margin-bottom:8px;line-height:1.6;">
+        Stok bahan otomatis berkurang sesuai jumlah di sini setiap kali menu ini terjual.
+      </div>
+      <div id="bomRows"></div>
+    </div>
+
+    <!-- HPP Preview -->
+    <div style="display:flex;justify-content:space-between;padding:10px 12px;
+      background:var(--bg-input);border-radius:var(--r-kecil);margin-bottom:14px;font-size:13px;">
+      <span style="color:var(--teks-2);">Perkiraan Biaya Produksi (HPP)</span>
+      <span style="font-weight:700;font-family:var(--mono);" id="hppPreview">Rp 0</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding:10px 12px;
+      background:var(--hijau-muda);border-radius:var(--r-kecil);margin-bottom:16px;font-size:13px;">
+      <span style="color:var(--teks-2);">Margin Keuntungan</span>
+      <span style="font-weight:700;color:var(--hijau);" id="marginPreview">—</span>
+    </div>
+
+    <div id="alertModal" style="display:none;padding:10px;border-radius:var(--r-kecil);
+      font-size:12px;font-weight:600;margin-bottom:12px;"></div>
+
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-hijau" onclick="simpanMenu()">Simpan Menu</button>
+      <button class="btn btn-kecil" onclick="tutupModal()">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="../js/auth.js"></script>
+<script src="../js/app.js"></script>
+<script>
+const EMOJI_LIST = ['☕','🍵','🥛','💧','🍹','🧃','🥤','🧋',
+                    '🍜','🍞','🥐','🍳','🥚','🍟','🍕','🍔',
+                    '🍰','🧁','🍩','🍪','🍫','🍬','🍭','🍮',
+                    '🌮','🥗','🍱','🍛','🍝','🥘','🍲','🫕'];
+
+let editMenuId = null;
+let bomRows    = []; // [{barangId, qty}]
+
+// ── RENDER GRID MENU ─────────────────────────────────────────────
+function renderGrid() {
+  const isOwner = WarkopAuth.isOwner();
+  const grid    = document.getElementById('gridMenu');
+
+  if (!App.state.menus.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--teks-redup);">
+      Belum ada menu. Klik "+ Tambah Menu" untuk membuat menu baru.</div>`;
+    return;
+  }
+
+  grid.innerHTML = App.state.menus.map(m => {
+    const h      = App.hpp(m.id);
+    const margin = m.harga > 0 ? ((m.harga - h)/m.harga*100).toFixed(0) + '%' : '—';
+    const aktif  = m.aktif !== false;
+    return `
+    <div class="kartu" style="position:relative;${!aktif?'opacity:.55;':''}">
+      <!-- Badge status -->
+      <div style="position:absolute;top:12px;right:12px;">
+        <span class="tag-aktif ${aktif?'badge-hijau':'badge-abu'}">
+          ${aktif ? '✓ Aktif' : '✗ Nonaktif'}
+        </span>
+      </div>
+
+      <!-- Header menu -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:52px;height:52px;background:var(--bg-input);border-radius:12px;
+          display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">
+          ${m.emoji || '🍽'}
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:700;">${m.nama}</div>
+          <div style="font-size:14px;font-weight:700;color:var(--hijau);font-family:var(--mono);">${App.rp(m.harga)}</div>
+        </div>
+      </div>
+
+      <!-- Info HPP & Margin -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="padding:8px;background:var(--bg-input);border-radius:6px;text-align:center;">
+          <div style="font-size:10px;color:var(--teks-2);margin-bottom:2px;">Biaya Produksi</div>
+          <div style="font-size:13px;font-weight:700;font-family:var(--mono);">${App.rp(h)}</div>
+        </div>
+        <div style="padding:8px;background:var(--hijau-muda,rgba(29,158,117,.1));border-radius:6px;text-align:center;">
+          <div style="font-size:10px;color:var(--teks-2);margin-bottom:2px;">Margin</div>
+          <div style="font-size:13px;font-weight:700;color:var(--hijau);">${margin}</div>
+        </div>
+      </div>
+
+      <!-- Daftar bahan -->
+      <div style="font-size:11px;color:var(--teks-2);margin-bottom:12px;">
+        <div style="font-weight:700;margin-bottom:4px;color:var(--teks);">📦 ${m.bom.length} bahan baku:</div>
+        ${m.bom.slice(0,4).map(b => {
+          const brg = App.state.barang.find(x => x.id === b.b);
+          return `<div style="padding:2px 0;">${brg ? brg.nama : b.b} — ${App.angka(b.q)} ${brg?.sat||''}</div>`;
+        }).join('')}
+        ${m.bom.length > 4 ? `<div style="color:var(--teks-redup);">+${m.bom.length-4} bahan lainnya</div>` : ''}
+      </div>
+
+      <!-- Tombol aksi -->
+      ${isOwner ? `
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="btn btn-kecil btn-hijau" onclick="bukaModalEdit('${m.id}')" style="flex:1;">✏ Edit</button>
+        <button class="btn btn-kecil" onclick="toggleMenu('${m.id}')"
+          style="flex:1;color:${aktif?'var(--kuning)':'var(--hijau)'};">
+          ${aktif ? '⊘ Nonaktifkan' : '✓ Aktifkan'}
+        </button>
+        <button class="btn btn-kecil" onclick="hapusMenuKonfirm('${m.id}','${m.nama}')"
+          style="color:var(--merah);padding:6px 8px;">🗑</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── MODAL TAMBAH ─────────────────────────────────────────────────
+function bukaModalTambah() {
+  if (!WarkopAuth.isOwner()) { App.toast('Hanya owner!','galat'); return; }
+  editMenuId = null;
+  document.getElementById('judulModal').textContent = '+ Tambah Menu Baru';
+  document.getElementById('f_nama').value  = '';
+  document.getElementById('f_harga').value = '';
+  document.getElementById('f_emoji').value = '';
+  document.getElementById('alertModal').style.display = 'none';
+  bomRows = [];
+  pilihEmoji('☕');
+  renderBomRows();
+  renderEmojiGrid();
+  updateHPPPreview();
+  document.getElementById('modalMenu').classList.add('terbuka');
+}
+
+// ── MODAL EDIT ───────────────────────────────────────────────────
+function bukaModalEdit(menuId) {
+  const menu = App.state.menus.find(m => m.id === menuId);
+  if (!menu) return;
+  editMenuId = menuId;
+  document.getElementById('judulModal').textContent = '✏ Edit Menu: ' + menu.nama;
+  document.getElementById('f_nama').value  = menu.nama;
+  document.getElementById('f_harga').value = menu.harga;
+  document.getElementById('alertModal').style.display = 'none';
+  bomRows = menu.bom.map(b => ({ barangId: b.b, qty: b.q }));
+  pilihEmoji(menu.emoji || '☕');
+  renderBomRows();
+  renderEmojiGrid();
+  updateHPPPreview();
+  document.getElementById('modalMenu').classList.add('terbuka');
+}
+
+function tutupModal() { document.getElementById('modalMenu').classList.remove('terbuka'); }
+function tutupModalLuar(e) { if (e.target.id === 'modalMenu') tutupModal(); }
+
+// ── EMOJI ─────────────────────────────────────────────────────────
+let emojiDipilih = '☕';
+function pilihEmoji(emoji) {
+  emojiDipilih = emoji;
+  document.getElementById('emojiPreview').textContent = emoji;
+  document.getElementById('f_emoji').value = emoji;
+}
+function ubahEmoji(val) {
+  if (val) { emojiDipilih = val; document.getElementById('emojiPreview').textContent = val; }
+}
+function renderEmojiGrid() {
+  document.getElementById('emojiGrid').innerHTML = EMOJI_LIST.map(e =>
+    `<button type="button" class="emoji-btn ${e===emojiDipilih?'aktif':''}" onclick="pilihEmoji('${e}')">${e}</button>`
+  ).join('');
+}
+
+// ── BOM ROWS ─────────────────────────────────────────────────────
+function tambahBomRow() {
+  bomRows.push({ barangId: App.state.barang[0]?.id || '', qty: 1 });
+  renderBomRows();
+}
+
+function renderBomRows() {
+  const el      = document.getElementById('bomRows');
+  const options = App.state.barang.map(b =>
+    `<option value="${b.id}">${b.nama} (${b.sat})</option>`
+  ).join('');
+
+  el.innerHTML = bomRows.map((row, i) => `
+    <div class="bom-item">
+      <select onchange="ubahBomBarang(${i},this.value)" style="flex:1;font-size:12px;padding:6px 8px;">
+        ${App.state.barang.map(b =>
+          `<option value="${b.id}" ${b.id===row.barangId?'selected':''}>${b.nama} (${b.sat})</option>`
+        ).join('')}
+      </select>
+      <input type="number" class="bom-qty" value="${row.qty}" min="0.01" step="0.01"
+        onchange="ubahBomQty(${i},this.value)" style="padding:6px 8px;"/>
+      <button onclick="hapusBomRow(${i})"
+        style="background:none;border:none;color:var(--merah);cursor:pointer;font-size:16px;padding:0 4px;">✕</button>
+    </div>`).join('') ||
+    '<div style="text-align:center;padding:14px;color:var(--teks-redup);font-size:12px;">Belum ada bahan. Klik "+ Tambah Bahan"</div>';
+
+  updateHPPPreview();
+}
+
+function ubahBomBarang(i, val) { bomRows[i].barangId = val; updateHPPPreview(); }
+function ubahBomQty(i, val)    { bomRows[i].qty = parseFloat(val)||0; updateHPPPreview(); }
+function hapusBomRow(i)        { bomRows.splice(i,1); renderBomRows(); }
+
+function updateHPPPreview() {
+  const harga = parseFloat(document.getElementById('f_harga').value) || 0;
+  const h = bomRows.reduce((total, row) => {
+    const b = App.state.barang.find(x => x.id === row.barangId);
+    return total + (b ? b.hBeli * row.qty : 0);
+  }, 0);
+  document.getElementById('hppPreview').textContent = App.rp(Math.round(h));
+  const margin = harga > 0 ? ((harga - h)/harga*100).toFixed(1) + '%' : '—';
+  const marginEl = document.getElementById('marginPreview');
+  marginEl.textContent = margin;
+  marginEl.style.color = harga > 0 && (harga-h)/harga > 0.3 ? 'var(--hijau)' : 'var(--kuning)';
+}
+
+// ── SIMPAN MENU ───────────────────────────────────────────────────
+function simpanMenu() {
+  const al   = document.getElementById('alertModal');
+  const nama = document.getElementById('f_nama').value.trim();
+  const harga= parseFloat(document.getElementById('f_harga').value)||0;
+  const err  = msg => { al.style.display='block'; al.style.background='var(--merah-muda)'; al.style.color='#F87171'; al.textContent=msg; };
+
+  if (!nama)   { err('Nama menu wajib diisi!'); return; }
+  if (!harga)  { err('Harga jual wajib diisi!'); return; }
+  if (!bomRows.length) { err('Tambahkan minimal 1 bahan baku!'); return; }
+
+  const data = {
+    nama,
+    harga,
+    emoji: emojiDipilih,
+    bom: bomRows.map(r => ({ b: r.barangId, q: r.qty })),
+  };
+
+  if (editMenuId) {
+    App.ubahMenu(editMenuId, data);
+    App.toast('✅ Menu ' + nama + ' berhasil diperbarui!', 'sukses');
+  } else {
+    App.tambahMenu(data);
+    App.toast('✅ Menu ' + nama + ' berhasil ditambahkan ke Kasir POS!', 'sukses');
+  }
+
+  tutupModal();
+  renderGrid();
+}
+
+// ── TOGGLE & HAPUS ────────────────────────────────────────────────
+function toggleMenu(menuId) {
+  const aktif = App.toggleAktifMenu(menuId);
+  App.toast(aktif ? 'Menu diaktifkan ✓' : 'Menu dinonaktifkan', aktif ? 'sukses' : 'peringatan');
+  renderGrid();
+}
+
+function hapusMenuKonfirm(menuId, nama) {
+  if (!confirm(`Hapus menu "${nama}"?\n\nData BOM menu ini juga akan dihapus.`)) return;
+  App.hapusMenu(menuId);
+  App.toast('Menu ' + nama + ' dihapus', 'peringatan');
+  renderGrid();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  if (!WarkopAuth.guard()) return;
+  renderGrid();
+  renderEmojiGrid();
+  // Sinkronisasi menu dari Sheets
+  if (window.WarkopAPI?.isConfigured()) {
+    App.syncFromSheets().then(() => renderGrid());
+  }
+});
+</script>
+</body>
+</html>
